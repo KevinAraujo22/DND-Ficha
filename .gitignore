@@ -1,0 +1,14 @@
+# ambiente / ferramentas locais
+.venv/
+
+# material-fonte (não versionar / não redistribuir)
+sources/
+*.pdf
+*.txt
+
+# versão antiga em arquivo único
+index.legacy.html
+
+# SO
+.DS_Store
+Thumbs.db

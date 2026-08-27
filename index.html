@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#6b241f">
+<title>Reinos Yokai — Ficha & Compêndio D&D 5e</title>
+<link rel="stylesheet" href="assets/css/styles.css?v=8">
+</head>
+<body class="home">
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M32 4L52 16V32C52 44 43 54 32 60C21 54 12 44 12 32V16L32 4Z" fill="#6b241f" stroke="#d4b878" stroke-width="2.5"/>
+        <path d="M32 16L40 22L37 32L32 38L27 32L24 22L32 16Z" fill="#d4b878"/>
+      </svg>
+      <div>
+        <h1>Reinos Yokai</h1>
+        <small>Ficha &amp; Compêndio · D&amp;D 5e + Ryoko's Guide</small>
+      </div>
+    </div>
+    <div class="top-actions">
+      <span class="save-indicator"><span class="save-dot"></span> Salvo automaticamente</span>
+      <button class="btn" id="btnLevelUp">Subir de nível</button>
+      <button class="btn secondary" id="btnNovaFicha">Nova ficha</button>
+      <button class="btn secondary" id="btnExportar">Exportar</button>
+      <button class="btn secondary" id="btnImportar">Importar</button>
+      <button class="btn" onclick="window.print()">Imprimir</button>
+      <input type="file" id="fileImport" accept="application/json" style="display:none">
+    </div>
+  </div>
+</header>
+
+<section class="welcome" id="welcome">
+  <h2>Reinos Yokai</h2>
+  <p>Monte um aventureiro com o material básico de D&amp;D 5e e o suplemento <em>Ryoko's Guide to the Yokai Realms</em>, ou explore o compêndio de raças, classes, equipamento e magias — cada categoria em sua página de seleção, com filtro entre conteúdo básico e homebrew.</p>
+  <button class="btn" id="btnNovoPersonagem">Criar novo personagem</button>
+  <button class="btn secondary" id="btnAbrirCompendio">Abrir compêndio</button>
+  <button class="btn secondary" id="btnAbrirFicha">Abrir ficha</button>
+</section>
+
+<main>
+  <div class="tabs main-tabs">
+    <button class="tab active" data-page="principal">Ficha</button>
+    <button class="tab" data-page="magias">Magias</button>
+    <button class="tab" data-page="inventario">Inventário</button>
+    <button class="tab" data-page="historia">Antecedente &amp; História</button>
+    <button class="tab" data-page="compendio">Compêndio</button>
+  </div>
+
+  <!-- ============ COMPÊNDIO (preenchido por compendium.js) ============ -->
+  <section class="page" id="page-compendio"></section>
+
+  <!-- ============ CRIAR (preenchido por creator.js) ============ -->
+  <section class="page" id="page-criar">
+    <section class="panel creator-panel" id="creator-panel"></section>
+  </section>
+
+  <!-- ============ FICHA ============ -->
+  <section class="page active" id="page-principal">
+    <div class="panel">
+      <h2>Identidade da ficha <span class="hint">Resultado da criação ou edição manual</span></h2>
+      <div class="grid cols-4">
+        <div class="field identity-primary" style="grid-column: span 2;">
+          <label>Nome do Personagem</label>
+          <input type="text" data-field="nome" placeholder="Ex.: Aeliana Duskwhisper">
+        </div>
+        <div class="field"><label>Classe &amp; Nível</label><input type="text" data-field="classeNivel" placeholder="Ex.: Bender 5"></div>
+        <div class="field"><label>Antecedente</label><input type="text" data-field="antecedente" placeholder="Ex.: Elementalist"></div>
+        <div class="field"><label>Espécie / Linhagem</label><input type="text" data-field="raca" placeholder="Ex.: Kitsune"></div>
+        <div class="field"><label>Alinhamento</label><input type="text" data-field="alinhamento" placeholder="Ex.: Caótico e Bom"></div>
+        <div class="field"><label>Pontos de Experiência</label><input type="number" data-field="xp" placeholder="0"></div>
+        <div class="field"><label>Jogador(a)</label><input type="text" data-field="jogador" placeholder="Seu nome"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Estatísticas de Combate <span class="hint">Iniciativa, CA e Percepção Passiva são calculadas automaticamente</span></h2>
+      <div class="grid cols-6">
+        <div class="small-stat"><label>Prof.</label><input type="text" data-field="profBonus" placeholder="+2"></div>
+        <div class="small-stat computed"><label>Iniciativa</label><div class="stat-value" id="statIniciativa" title="modificador de Destreza + bônus extra">+0</div></div>
+        <div class="small-stat computed"><label>CA</label><div class="stat-value" id="statCA" title="base da armadura + Destreza (com limite) + escudo + outros">10</div></div>
+        <div class="small-stat"><label>Deslocamento</label><input type="text" data-field="deslocamento" placeholder="9m"></div>
+        <div class="small-stat computed"><label>Perc. Passiva</label><div class="stat-value" id="statPercepcao" title="10 + bônus de Percepção + bônus extra">10</div></div>
+        <div class="small-stat"><label>Inspiração</label><input type="text" data-field="inspiracao" placeholder="—"></div>
+      </div>
+      <div class="grid cols-4" style="margin-top:12px">
+        <div class="field"><label>CA base da armadura</label><input type="text" data-field="caArmadura" placeholder="vazio = desarmado (10)"></div>
+        <div class="field"><label>Limite de Destreza p/ CA</label><input type="text" data-field="caLimiteDes" placeholder="vazio = sem limite · 0 = armadura pesada"></div>
+        <div class="field"><label>Escudo (+CA)</label><input type="text" data-field="caEscudo" placeholder="ex.: 2"></div>
+        <div class="field"><label>Outros bônus de CA</label><input type="text" data-field="caOutros" placeholder="ex.: +1"></div>
+      </div>
+      <div class="grid cols-2" style="margin-top:8px">
+        <div class="field"><label>Bônus extra de Iniciativa</label><input type="text" data-field="iniciativaExtra" placeholder="ex.: +2"></div>
+        <div class="field"><label>Bônus extra de Percepção Passiva</label><input type="text" data-field="percepcaoExtra" placeholder="ex.: +5"></div>
+      </div>
+    </div>
+
+    <div class="layout-columns">
+      <div class="col-stack">
+        <div class="panel"><h2>Atributos</h2><div class="abilities" id="abilitiesContainer"></div></div>
+        <div class="panel"><h2>Testes de Resistência</h2><div class="check-list" id="savesContainer"></div></div>
+      </div>
+      <div class="col-stack">
+        <div class="panel">
+          <h2>Perícias</h2>
+          <div class="check-list" id="skillsContainer"></div>
+          <div class="skills-hint">Toque duas vezes numa perícia para marcar Especialização (★, dobra o bônus de proficiência)</div>
+        </div>
+      </div>
+      <div class="col-stack">
+        <div class="panel">
+          <h2>Pontos de Vida</h2>
+          <div class="hp-box">
+            <div class="hp-row">
+              <div class="field"><label>PV Máximo</label><input type="text" data-field="pvMax"></div>
+              <div class="field"><label>PV Atual</label><input type="text" data-field="pvAtual"></div>
+              <div class="field"><label>PV Temp.</label><input type="text" data-field="pvTemp"></div>
+            </div>
+            <div class="grid cols-3">
+              <div class="field"><label>Dados de Vida</label><input type="text" data-field="dvTotal" placeholder="Ex.: 5d8"></div>
+              <div class="field"><label>DV Gastos</label><input type="text" data-field="dvGastos"></div>
+              <div class="field"><label>Recuperação</label><input type="text" data-field="dvRecuperacao"></div>
+            </div>
+            <div class="death-saves">
+              <div class="group"><span class="group-label">Sucessos</span><div class="dots succ">
+                <input type="checkbox" data-field="morteSucesso1"><input type="checkbox" data-field="morteSucesso2"><input type="checkbox" data-field="morteSucesso3"></div></div>
+              <div class="group"><span class="group-label">Testes c/ Morte</span></div>
+              <div class="group"><span class="group-label">Falhas</span><div class="dots fail">
+                <input type="checkbox" data-field="morteFalha1"><input type="checkbox" data-field="morteFalha2"><input type="checkbox" data-field="morteFalha3"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <h2>Perícias com Ferramentas &amp; Idiomas</h2>
+          <textarea data-field="ferramentasIdiomas" placeholder="Ex.: Ferramentas de Ladrão; Idiomas: Comum, Primordial..." style="min-height:90px;"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Armas &amp; Ataques</h2>
+      <table class="simple" id="tblAtaques">
+        <thead><tr><th style="width:32%">Nome</th><th style="width:14%">Bônus</th><th style="width:22%">Dano/Tipo</th><th style="width:28%">Notas</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="row-actions"><button class="icon-btn" data-add="ataques">+ Adicionar arma</button></div>
+    </div>
+
+    <div class="panel">
+      <h2>Características de Classe, Espécie &amp; Talentos</h2>
+      <div class="feature-list" id="featuresContainer"></div>
+      <div class="row-actions"><button class="icon-btn" data-add="caracteristicas">+ Adicionar característica</button></div>
+    </div>
+  </section>
+
+  <!-- ============ MAGIAS ============ -->
+  <section class="page" id="page-magias">
+    <div class="panel">
+      <h2>Conjuração</h2>
+      <div class="grid cols-4">
+        <div class="field"><label>Classe de Conjuração</label><input type="text" data-field="classeConjuracao"></div>
+        <div class="field"><label>Atributo de Conjuração</label><input type="text" data-field="atributoConjuracao"></div>
+        <div class="field"><label>CD para Resistência</label><input type="text" data-field="cdMagia"></div>
+        <div class="field"><label>Bônus de Ataque</label><input type="text" data-field="ataqueMagia"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Espaços de Magia <span class="hint">total / usados por nível</span></h2>
+      <div class="spell-slots" id="spellSlotsContainer"></div>
+    </div>
+    <div class="panel">
+      <h2>Truques &amp; Magias Conhecidas/Preparadas</h2>
+      <table class="simple" id="tblMagias">
+        <thead><tr><th style="width:8%">Nv.</th><th style="width:28%">Nome</th><th style="width:14%">Escola</th><th style="width:10%">Prep.</th><th style="width:36%">Notas / Efeito</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="row-actions"><button class="icon-btn" data-add="magias">+ Adicionar magia</button></div>
+      <p class="pdfnote">Dica: adicione magias direto pela aba <b>Compêndio → Magias</b>.</p>
+    </div>
+  </section>
+
+  <!-- ============ INVENTÁRIO ============ -->
+  <section class="page" id="page-inventario">
+    <div class="panel">
+      <h2>Dinheiro</h2>
+      <div class="grid cols-6">
+        <div class="field"><label>PC (Cobre)</label><input type="text" data-field="pc"></div>
+        <div class="field"><label>PP (Prata)</label><input type="text" data-field="pp"></div>
+        <div class="field"><label>PE (Electrum)</label><input type="text" data-field="pe"></div>
+        <div class="field"><label>PO (Ouro)</label><input type="text" data-field="po"></div>
+        <div class="field"><label>PL (Platina)</label><input type="text" data-field="pl"></div>
+        <div class="field"><label>Carga Total (kg)</label><input type="text" data-field="carga"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Equipamento &amp; Itens</h2>
+      <table class="simple" id="tblItens">
+        <thead><tr><th style="width:34%">Item</th><th style="width:10%">Qtd.</th><th style="width:16%">Peso</th><th style="width:34%">Notas</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="row-actions"><button class="icon-btn" data-add="itens">+ Adicionar item</button></div>
+      <p class="pdfnote">Dica: adicione armas, armaduras e itens pela aba <b>Compêndio</b>.</p>
+    </div>
+    <div class="panel">
+      <h2>Aliados &amp; Organizações</h2>
+      <textarea class="traits-textarea" data-field="aliados"></textarea>
+    </div>
+  </section>
+
+  <!-- ============ HISTÓRIA ============ -->
+  <section class="page" id="page-historia">
+    <div class="panel">
+      <h2>Aparência</h2>
+      <div class="grid cols-6">
+        <div class="field"><label>Idade</label><input type="text" data-field="idade"></div>
+        <div class="field"><label>Altura</label><input type="text" data-field="altura"></div>
+        <div class="field"><label>Peso</label><input type="text" data-field="peso"></div>
+        <div class="field"><label>Olhos</label><input type="text" data-field="olhos"></div>
+        <div class="field"><label>Pele</label><input type="text" data-field="pele"></div>
+        <div class="field"><label>Cabelo</label><input type="text" data-field="cabelo"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Traços de Personalidade, Ideais, Vínculos e Defeitos</h2>
+      <div class="grid cols-2">
+        <div class="field"><label>Traços de Personalidade</label><textarea class="traits-textarea" data-field="tracos"></textarea></div>
+        <div class="field"><label>Ideais</label><textarea class="traits-textarea" data-field="ideais"></textarea></div>
+        <div class="field"><label>Vínculos</label><textarea class="traits-textarea" data-field="vinculos"></textarea></div>
+        <div class="field"><label>Defeitos</label><textarea class="traits-textarea" data-field="defeitos"></textarea></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>História &amp; Origem</h2>
+      <textarea class="traits-textarea" style="min-height:200px;" data-field="historia" placeholder="Conte a história do seu personagem..."></textarea>
+    </div>
+    <div class="panel">
+      <h2>Notas Adicionais</h2>
+      <textarea class="traits-textarea" style="min-height:140px;" data-field="notas"></textarea>
+    </div>
+  </section>
+</main>
+
+<footer class="app-footer">
+  Ficha &amp; Compêndio D&amp;D 5e · Conteúdo básico do SRD 5.1 + <em>Ryoko's Guide to the Yokai Realms</em> (Loot Tavern) transcrito dos PDFs fornecidos · Dados salvos localmente no navegador
+</footer>
+
+<!-- ===== dados ===== -->
+<script src="js/data/_registry.js?v=8"></script>
+<script src="js/data/skills-srd.js?v=8"></script>
+<script src="js/data/races-srd.js?v=8"></script>
+<script src="js/data/races-yokai.js?v=8"></script>
+<script src="js/data/classes-srd.js?v=8"></script>
+<script src="js/data/classes-yokai.js?v=8"></script>
+<script src="js/data/subclasses-yokai.js?v=8"></script>
+<script src="js/data/subclasses-yokai-2.js?v=8"></script>
+<script src="js/data/backgrounds-srd.js?v=8"></script>
+<script src="js/data/backgrounds-yokai.js?v=8"></script>
+<script src="js/data/feats-yokai.js?v=8"></script>
+<script src="js/data/weapon-properties.js?v=8"></script>
+<script src="js/data/weapons.js?v=8"></script>
+<script src="js/data/armor-srd.js?v=8"></script>
+<script src="js/data/gear.js?v=8"></script>
+<script src="js/data/prostheses-yokai.js?v=8"></script>
+<script src="js/data/weapon-mastery-yokai.js?v=8"></script>
+<script src="js/data/magic-items-yokai.js?v=8"></script>
+<script src="js/data/spells.js?v=8"></script>
+<!-- ===== app ===== -->
+<script src="js/sheet.js?v=8"></script>
+<script src="js/levelup.js?v=8"></script>
+<script src="js/compendium.js?v=8"></script>
+<script src="js/creator.js?v=8"></script>
+<script src="js/app.js?v=8"></script>
+</body>
+</html>
