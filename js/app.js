@@ -17,10 +17,6 @@
   function leaveHome() { document.body.classList.remove("home"); }
 
   function boot() {
-    root.DNDSheet.boot();
-    root.DNDCompendium.boot();
-    root.DNDCreator.boot();
-
     document.querySelectorAll(".main-tabs .tab").forEach(function (t) {
       t.addEventListener("click", function () { leaveHome(); showTab(t.dataset.page); });
     });
@@ -31,6 +27,10 @@
     if (bOpen) bOpen.addEventListener("click", function () { leaveHome(); showTab("principal"); });
     var bCompendio = document.getElementById("btnAbrirCompendio");
     if (bCompendio) bCompendio.addEventListener("click", function () { leaveHome(); showTab("compendio"); });
+
+    if (root.DNDSheet) root.DNDSheet.boot();
+    if (root.DNDCompendium) root.DNDCompendium.boot();
+    if (root.DNDCreator) root.DNDCreator.boot();
 
     /* rota inicial */
     var hash = (location.hash || "").replace("#", "");
